@@ -1,3 +1,5 @@
+import evacSim.util.RNG;
+
 
 // TODO: remove this class once our stuff is organized
 
