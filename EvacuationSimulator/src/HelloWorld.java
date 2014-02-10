@@ -7,6 +7,6 @@ public class HelloWorld {
 		System.out.println("test");
 		RNG r = new RNG();
 		for(int i = 0; i < 100; i++)
-			System.out.println(r.next());
+			System.out.println(r.nextI(1, 100));
 	}
 }
