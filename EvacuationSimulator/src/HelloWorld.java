@@ -8,5 +8,7 @@ public class HelloWorld {
 		RNG r = new RNG();
 		for(int i = 0; i < 100; i++)
 			System.out.println(r.nextI(1, 100));
+		Wall w = new Wall();
+		System.out.println(w.getWeight());
 	}
 }
