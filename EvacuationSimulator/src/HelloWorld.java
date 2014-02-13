@@ -1,3 +1,6 @@
+import evacSim.util.RNG;
+import evacSim.util.Wall;
+
 
 // TODO: remove this class once our stuff is organized
 

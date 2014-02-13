@@ -1,3 +1,4 @@
+package evacSim.util;
 /**
  * 
  * @author Joseph Mattingly
