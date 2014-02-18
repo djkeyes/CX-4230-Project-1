@@ -1,5 +1,5 @@
 import evacSim.util.RNG;
-import evacSim.util.Wall;
+//import evacSim.util.Wall;
 
 public class HelloWorld {
 	public static void main(String[] args){
@@ -8,7 +8,7 @@ public class HelloWorld {
 		RNG r = new RNG();
 		for(int i = 0; i < 100; i++)
 			System.out.println(r.nextI(1, 100));
-		Wall w = new Wall();
-		System.out.println(w.getWeight());
+//		Wall w = new Wall();
+//		System.out.println(w.getWeight());
 	}
 }
