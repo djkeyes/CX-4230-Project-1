@@ -1,4 +1,5 @@
 import java.util.*;
+
 /**
  * Test of the RNG (random number generator)
  * 
@@ -12,8 +13,9 @@ public class Test
         System.out.println("Test #1: Showing the distribution of numbers between 1-10");
         
         int[] testArray = new int[10];
-        double x;
-        int n;
+        int[] testArray2 = new int[10000000];
+        double x, y;
+        int n, o;
 
         RNG testRand = new RNG();
 
@@ -23,8 +25,8 @@ public class Test
             testArray[i] = 0;
         }
 
-        // Test teh random number generator 1000000 times
-        for (long i=0; i < 1000000; i++) 
+        // Test the random number generator 1000000 times
+        for (long i=0; i < 10000000; i++) 
         {
             // generate a new random number between 0 and 9
             x = testRand.next() * 10.0;
@@ -42,55 +44,44 @@ public class Test
         
         System.out.println("Test #2: Showing the randomness using chi-square distribution");
         
-        int[] testArray2 = new int[1000000];
-        int max = 0;
-        
-        // Fill the array with random numbers
-        for (int i = 0; i < 1000000; i++)
+        for(int i = 0; i < 10000000; i++) 
         {
-            testArray2[i] = testRand.nextI();
-            while (testArray2[i] > max)
-            {
-                max = testArray2[i];
-            }
+            y = testRand.next() * 10;
+            o = (int) y;
+            testArray2[i] = o;
         }
-                
-        if(isRandom(testArray2, max) == true)
+        
+        double ans = chiTest(testArray2, 10);
+        if(ans <= (10000000/10))
         {
-            System.out.println("According to the chi-square test, the nextI() method produces random numbers");
+            System.out.println("The Chi-Square Value is: " + ans);
         }
         else
         {
-            System.out.println("According to the chi-square test, the nextI() method DOESN'T produce random numbers");
+            System.out.println("The Chi-Square Value isn't valid");
         }
     }
     
-    public static boolean isRandom(int[] randomArray, int upperBound)
-    {
-        //This is valid if N is greater than about 10 * upperBound
-        if (randomArray.length <= 10 * upperBound)
-        {
-            return false;
-        }
-        //Get frequency of randoms
-        Map <Integer, Integer> freqMap = getFreq(randomArray);
- 
+    public static double chiTest(int[] randomArray, int upperBound)
+    { 
+		Map<Integer,Integer> freqMap = getFreq(randomArray);
+        
         // Calculate chi-square
         double nSubR = (double)randomArray.length / upperBound;
         double chiSquare = 0;
+        double val = 0;
+        double temp = 0;
  
         for (int v : freqMap.values())
         {
             double f = v - nSubR;
-            chiSquare += f * f;
+            val = f * f;
+            temp = val / nSubR;
+            chiSquare += temp;
         }
-        chiSquare /= nSubR;
-        
-        //For testing purposes
-        System.out.println(Math.abs(chiSquare - upperBound) + " <= " + Math.sqrt(upperBound));
         
         //The statistic should be within 2(r)^1/2 of upperBound
-        return Math.abs(chiSquare - upperBound) <= 2 * Math.sqrt(upperBound);
+        return Math.abs(chiSquare - upperBound);
 
     }
  
