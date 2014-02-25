@@ -6,7 +6,7 @@ public class VisualizationRunner {
 
 	
 	public static void main(String[] args){
-		SimulationController sim = SimulationController.createSimpleSimulation();
+		SimulationController sim = SimulationController.createEvacSimulation();
 		Visualizer window = new Visualizer(sim);
 		window.show();
 		sim.start();
