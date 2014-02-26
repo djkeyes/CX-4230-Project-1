@@ -57,14 +57,12 @@ public class SimulationController {
 	 */
 	public static SimulationController createEvacSimulation() {
 		Grid smallGrid = new Grid(300, 308);
-
-		//smallGrid.setCell(200, 300, new Door());
 		
-		// Paving 5th St
+		// Paving 5th St NW
 		for(int c = 0; c <= 268; c++)
 			for(int r = 17; r <=36; r++)
 				smallGrid.setCell(r, c, new Road());
-		// Paving Armistead
+		// Paving Armstead Pl
 		for(int c = 41; c <= 268; c++)
 			for(int r = 227; r <=246; r++)
 				smallGrid.setCell(r, c, new Road());
@@ -76,11 +74,39 @@ public class SimulationController {
 		for(int c = 269; c <= 292; c++)
 			for(int r = 0; r <= 299; r++)
 				smallGrid.setCell(r, c, new Road());
+		//Paving 5th St NE
+		for(int c = 293; c <= 307; c++)
+			for(int r = 125; r <=144; r++)
+				smallGrid.setCell(r, c, new Road());
 		// Build the Management Building
 		for(int c = 47; c <= 262; c++)
 			for(int r = 43; r <= 220; r++)
 				if(!(r <= 146 && c >= 192)) // Management courtyard
 					smallGrid.setCell(r, c, new Obstacle());
+		// Build the GT Hotel
+		for(int c = 0; c <= 10; c++)
+			for(int r = 43; r <=299; r++)
+				smallGrid.setCell(r, c, new Obstacle());
+		// Build the Crum and Forster Building
+		for(int c = 61; c <= 152; c++)
+			for(int r = 252; r <=299; r++)
+				smallGrid.setCell(r, c, new Obstacle());
+		// Various sundry buildings
+		for(int c = 299; c <= 307; c++)
+			for(int r = 151; r <=299; r++)
+				smallGrid.setCell(r, c, new Obstacle());
+		for(int c = 299; c <= 307; c++)
+			for(int r = 0; r <=118; r++)
+				smallGrid.setCell(r, c, new Obstacle());
+		for(int c = 47; c <= 262; c++)
+			for(int r = 0; r <=10; r++)
+				smallGrid.setCell(r, c, new Obstacle());
+		for(int c = 0; c <= 10; c++)
+			for(int r = 0; r <=10; r++)
+				smallGrid.setCell(r, c, new Obstacle());
+		
+		// TESTING
+		smallGrid.setCell(252, 100, new Door());
 		
 		smallGrid.initializeEmptyCells();
 
