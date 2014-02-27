@@ -121,7 +121,6 @@ public class Grid implements Iterable<Cell> {
 			distance[goal[0]][goal[1]] = 0;
 		}
 
-		System.out.println(Arrays.toString(distance[0]));
 		int[] nextRow = { 1, 0, -1, 0 };
 		int[] nextCol = { 0, 1, 0, -1 };
 		LinkedList<int[]> queue = new LinkedList<int[]>();
@@ -140,12 +139,6 @@ public class Grid implements Iterable<Cell> {
 					}
 				}
 			}
-		}
-		
-		System.out.println(goals);
-		for(int i=30; i < distance.length; i++){
-			int[] arr = distance[i];
-			System.out.println(Arrays.toString(arr));
 		}
 		
 		pedestrianDistances = distance;
