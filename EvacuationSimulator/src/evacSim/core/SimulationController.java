@@ -10,25 +10,41 @@ import javax.swing.Timer;
 
 import evacSim.util.RNG;
 
+/**
+ * 
+ * @author Daniel Keyes
+ * @author Joseph Mattingly
+ *
+ */
 public class SimulationController {
 
 	private UpdateHandler myHandler = null;
 	private Grid currentState;
 	private Timer timer;
 	private boolean useRealtime;
+	private int timestep;
 
 	private static final int DEFAULT_SEED = 1234;
 
 	// global RNG instance
 	// TODO: make this a singleton member variable or something that uses good programming practice
 	public static final RNG random = new RNG(DEFAULT_SEED);
+	public static int simTime = 0;
 
+	/**
+	 * 
+	 * @param startingGrid
+	 * @param timestep
+	 * @param crosswalkPeriod
+	 * @param useRealtime
+	 */
 	public SimulationController(Grid startingGrid, int timestep, int crosswalkPeriod, boolean useRealtime) {
 		currentState = startingGrid;
 
 		CrosswalkController.getInstance().setPeriod(crosswalkPeriod);
 
 		this.useRealtime = useRealtime;
+		this.timestep = timestep;
 		timer = new Timer(timestep, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -37,10 +53,19 @@ public class SimulationController {
 		});
 	}
 
+	/**
+	 * 
+	 * @param smallGrid
+	 * @param timestep
+	 */
 	public SimulationController(Grid smallGrid, int timestep) {
 		this(smallGrid, timestep, 75, true);
 	}
 
+	/**
+	 * 
+	 * @param handler
+	 */
 	public void setHandler(UpdateHandler handler) {
 		myHandler = handler;
 	}
@@ -138,15 +163,18 @@ public class SimulationController {
 				smallGrid.setCell(r, c, new EmptyCell());
 
 		// TESTING
-		smallGrid.setCell(252, 100, new Door());
+		smallGrid.setCell(252, 150, new Door());
 
 		smallGrid.initializeEmptyCells();
 
-		int crosswalkInterval = 200;
+		int crosswalkInterval = 375; //200;
 		int timestep = 10;
 		return new SimulationController(smallGrid, timestep, crosswalkInterval, true);
 	}
 
+	/**
+	 * 
+	 */
 	public void start() {
 		currentState.initialize();
 
@@ -159,8 +187,12 @@ public class SimulationController {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public void updateSimulation() {
 		CrosswalkController.getInstance().step();
+		simTime += timestep;
 
 		for (Cell c : currentState) {
 			c.calcUpdate();
@@ -173,6 +205,10 @@ public class SimulationController {
 			myHandler.onUpdate();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Grid getGrid() {
 		return currentState;
 	}

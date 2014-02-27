@@ -3,6 +3,11 @@ package evacSim.core;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 
+ * @author Daniel Keyes
+ *
+ */
 public class Person extends Cell {
 
 	private final int walkingTime;
@@ -16,8 +21,8 @@ public class Person extends Cell {
 	}
 
 	/**
-	 * @param walkingTime
-	 *            The amount of time it takes this Person to take one step.
+	 * 
+	 * @param walkingTime The amount of time it takes this Person to take one step.
 	 */
 	private Person(int walkingTime) {
 		this.count = this.walkingTime = walkingTime;
@@ -34,7 +39,7 @@ public class Person extends Cell {
 		if (--count <= 0) {
 
 			if(getRow() == 0){
-				System.out.println("A person made it out alive!");
+				System.out.println(SimulationController.simTime + ":  A person made it out alive!");
 			} else{ // (getRow() > 0)
 				// if the cell above is walkable and not yet assigned
 				int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } };
