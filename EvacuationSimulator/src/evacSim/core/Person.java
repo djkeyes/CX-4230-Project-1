@@ -8,6 +8,10 @@ public class Person extends Cell {
 	private final int walkingTime;
 	private int count;
 	private boolean onCrosswalk;
+	
+
+	static int numPeopleSafe= 0;
+	static List<Integer> peopleSafeOverTime = new LinkedList<Integer>();
 
 	public Person() {
 		// default: walk at 1 cell per second
@@ -34,6 +38,7 @@ public class Person extends Cell {
 		if (--count <= 0) {
 
 			if (getRow() == 0) {
+				numPeopleSafe++;
 				System.out.println("A person made it out alive!");
 			} else { // (getRow() > 0)
 				// if the cell above is walkable and not yet assigned
@@ -98,6 +103,10 @@ public class Person extends Cell {
 
 	boolean isOnCrosswalk() {
 		return onCrosswalk;
+	}
+	
+	public static boolean isEveryoneSafe(){
+		return numPeopleSafe == Door.MAX_BUILDING_OCCUPANCY;
 	}
 
 }

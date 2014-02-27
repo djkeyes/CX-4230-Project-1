@@ -13,8 +13,8 @@ import evacSim.util.RNG;
  */
 public class Door extends Cell {
 	
-	private static int numPeopleExited= 0;
-	private static final int PEOPLE_IN_BUILDING = 1500;
+	static int numPeopleExited= 0;
+	static final int MAX_BUILDING_OCCUPANCY = 1500;
 	/**
 	 * returns a list of adjacent empty cells (which a person could walk into)
 	 */
@@ -49,7 +49,7 @@ public class Door extends Cell {
 	}
 	@Override
 	public void calcUpdate() {
-		if(numPeopleExited >= PEOPLE_IN_BUILDING){
+		if(numPeopleExited >= MAX_BUILDING_OCCUPANCY){
 			return;
 		}
 		

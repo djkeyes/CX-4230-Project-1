@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.Timer;
 
@@ -16,6 +17,8 @@ public class SimulationController {
 	private Grid currentState;
 	private Timer timer;
 	private boolean useRealtime;
+	
+	private Statistics stats;
 
 	private static final int DEFAULT_SEED = 1234;
 
@@ -25,6 +28,7 @@ public class SimulationController {
 
 	public SimulationController(Grid startingGrid, int timestep, int crosswalkPeriod, boolean useRealtime) {
 		currentState = startingGrid;
+		stats = new Statistics();
 
 		CrosswalkController.getInstance().setPeriod(crosswalkPeriod);
 
@@ -73,7 +77,7 @@ public class SimulationController {
 	 * 
 	 * @return
 	 */
-	public static SimulationController createEvacSimulation() {
+	public static SimulationController createEvacSimulation(boolean runInRealtime, boolean randomizeDoors) {
 		Grid smallGrid = new Grid(300, 308);
 
 		// Paving 5th St NW
@@ -136,27 +140,48 @@ public class SimulationController {
 		for (int c = 254; c <= 264; c++)
 			for (int r = 227; r <= 246; r++)
 				smallGrid.setCell(r, c, new EmptyCell());
-
-		// TESTING
-		smallGrid.setCell(252, 100, new Door());
-		smallGrid.setCell(252, 101, new Door());
-		smallGrid.setCell(282, 61, new Door());
-		smallGrid.setCell(282, 152, new Door());
+		
+		List<int[]> doorCoords = new LinkedList<int[]>();
+		if(randomizeDoors){
+			// TODO randomize
+			// used a simple fixed door configuration
+			doorCoords.add(new int[]{252, 100});
+			doorCoords.add(new int[]{252, 101});
+			doorCoords.add(new int[]{282, 61});
+			doorCoords.add(new int[]{282, 152});
+		} else {
+			// used a simple fixed door configuration
+			doorCoords.add(new int[]{252, 100});
+			doorCoords.add(new int[]{252, 101});
+			doorCoords.add(new int[]{282, 61});
+			doorCoords.add(new int[]{282, 152});
+		}
+		for(int[] coord : doorCoords){
+			smallGrid.setCell(coord[0], coord[1], new Door());
+		}
 
 		smallGrid.initializeEmptyCells();
 
 		int crosswalkInterval = 200;
 		int timestep = 10;
-		return new SimulationController(smallGrid, timestep, crosswalkInterval, true);
+		
+		SimulationController result = new SimulationController(smallGrid, timestep, crosswalkInterval, runInRealtime);
+		result.stats.addStatistic("Door positions", doorCoords);
+		
+		return result;
 	}
 
 	public void start() {
+		stats.addStatistic("People safe", Person.peopleSafeOverTime);
+		//stats.addStatistic("Mean distance");
+		
+		
 		currentState.initialize();
 
 		if (useRealtime) {
 			timer.start();
 		} else {
-			while (true) {
+			while (!Person.isEveryoneSafe()) {
 				updateSimulation();
 			}
 		}
@@ -174,10 +199,18 @@ public class SimulationController {
 
 		if (myHandler != null)
 			myHandler.onUpdate();
+		
+		// update some statistics
+		Person.peopleSafeOverTime.add(Person.numPeopleSafe);
+		//Person.medianPersonDistance = ??
 	}
 
 	public Grid getGrid() {
 		return currentState;
+	}
+
+	public Statistics getStatistics() {
+		return stats;
 	}
 
 }
