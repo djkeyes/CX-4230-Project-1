@@ -1,3 +1,5 @@
+package evacSim.util;
+
 import java.util.*;
 
 /**
@@ -6,7 +8,7 @@ import java.util.*;
  * @author Rushad Heerjee
  * @version 1.0
  */
-public class Test
+public class RNGtest
 {
     public static void main(String[] args)
     {

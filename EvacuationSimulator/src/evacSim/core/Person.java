@@ -10,7 +10,8 @@ public class Person extends Cell {
 	private boolean onCrosswalk;
 
 	public Person() {
-		this(5);
+		// default: walk at 1 cell per second
+		this(1);
 		onCrosswalk = false;
 	}
 

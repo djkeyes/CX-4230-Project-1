@@ -1,6 +1,8 @@
 package evacSim.core;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 /**
@@ -16,6 +18,9 @@ public class Grid implements Iterable<Cell> {
 	// grids are row-major indexed. cells[i][j] refers to row i, column j.
 	private Cell[][] cells;
 	private int nRows, nCols;
+	
+	// distance from goal, for use by pedestrians
+	int[][] pedestrianDistances;
 	
 	public Grid(){
 		this(100,100);
@@ -91,4 +96,59 @@ public class Grid implements Iterable<Cell> {
 	public boolean inBounds(int row, int col){
 		return row >= 0 && col >= 0 && row < nRows && col < nCols;
 	}
+	
+
+	/**
+	 * To initialize any datastructers needed for the simulation, after the grid has been specified
+	 */
+	void initialize() {
+		// Compute an array of distances for People to use to find a destination
+		// This code is quick-n-dirty
+		int[][] distance = new int[nRows][nCols];
+		LinkedList<int[]> goals = new LinkedList<int[]>();
+		// scan along top row and find target sidewalks
+		for (int i = 0; i < nCols; i++) {
+			Cell cur = getCell(0, i);
+			if (cur instanceof EmptyCell) {
+				goals.add(new int[] { 0, i });
+			}
+		}
+
+		for (int[] arr : distance) {
+			Arrays.fill(arr, -1);
+		}
+		for (int[] goal : goals) {
+			distance[goal[0]][goal[1]] = 0;
+		}
+
+		System.out.println(Arrays.toString(distance[0]));
+		int[] nextRow = { 1, 0, -1, 0 };
+		int[] nextCol = { 0, 1, 0, -1 };
+		LinkedList<int[]> queue = new LinkedList<int[]>();
+		queue.addAll(goals);
+		while (!queue.isEmpty()) {
+			int[] cur = queue.removeFirst();
+			for (int i = 0; i < nextRow.length; i++) {
+				int[] next = new int[] { cur[0] + nextRow[i], cur[1] + nextCol[i] };
+				if (inBounds(next[0], next[1])) {
+					Cell cell = getCell(next[0], next[1]);
+					if (cell instanceof EmptyCell || cell instanceof Crosswalk) {
+						if (distance[next[0]][next[1]] == -1) {
+							distance[next[0]][next[1]] = distance[cur[0]][cur[1]] + 1;
+							queue.add(next);
+						}
+					}
+				}
+			}
+		}
+		
+		System.out.println(goals);
+		for(int i=30; i < distance.length; i++){
+			int[] arr = distance[i];
+			System.out.println(Arrays.toString(arr));
+		}
+		
+		pedestrianDistances = distance;
+	}
+
 }

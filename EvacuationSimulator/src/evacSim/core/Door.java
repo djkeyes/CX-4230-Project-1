@@ -49,9 +49,9 @@ public class Door extends Cell {
 	public void calcUpdate() {
 		
 		// here's some default behavior that shouldn't work in general: just spawn to the right with Math.random()
-		// 5% chance.
+		// 20% chance.
 		RNG random = SimulationController.random;
-		// TODO use something other than a 5% uniform distribution
+		// TODO use something other than a 20% uniform distribution
 		if(random.next() > 0.8){
 			List<Cell> adjacent = findAdjacentCells();
 			if(adjacent.size() > 0){
