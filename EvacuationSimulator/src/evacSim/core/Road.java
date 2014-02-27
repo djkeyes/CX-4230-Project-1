@@ -7,4 +7,9 @@ public class Road extends Cell {
 		// TODO roads act as obstacles, except sometimes when there's a pedestrian crosswalk
 	}
 
+	@Override
+	boolean isWalkable() {
+		return false;
+	}
+
 }

@@ -16,6 +16,7 @@ public class SimulationController {
 	private static final int DEFAULT_SEED = 1234;
 	
 	// global RNG instance
+	// TODO: make this a singleton member variable or something that uses good programming practice
 	public static final RNG random = new RNG(DEFAULT_SEED);
 
 	public SimulationController(Grid startingGrid, int timestep) {
@@ -111,6 +112,15 @@ public class SimulationController {
 		for(int c = 0; c <= 10; c++)
 			for(int r = 0; r <=10; r++)
 				smallGrid.setCell(r, c, new Obstacle());
+		// Painting two crosswalks
+		// TODO: use the correct location
+		for(int c = 45; c <= 55; c++)
+			for(int r = 227; r <=246; r++)
+				smallGrid.setCell(r, c, new Obstacle());
+		for(int c = 254; c <= 264; c++)
+			for(int r = 227; r <=246; r++)
+				smallGrid.setCell(r, c, new Crosswalk());
+		
 		
 		// TESTING
 		smallGrid.setCell(252, 100, new Door());

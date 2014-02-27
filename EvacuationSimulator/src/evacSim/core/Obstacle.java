@@ -7,4 +7,9 @@ public class Obstacle extends Cell {
 	public void calcUpdate() {
 		//TODO obstacles will always (i think?) stay obstacles, so this method can stay empty
 	}
+
+	@Override
+	boolean isWalkable() {
+		return false;
+	}
 }

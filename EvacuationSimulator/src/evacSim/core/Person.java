@@ -55,7 +55,6 @@ public class Person extends Cell {
 							availableLocations.add(right);
 					}
 					int index = SimulationController.random.nextI(0, availableLocations.size()-1);
-					System.out.println(index);
 					nextCell = availableLocations.get(index);
 					
 				}
@@ -67,6 +66,11 @@ public class Person extends Cell {
 			
 		}
 
+	}
+
+	@Override
+	boolean isWalkable() {
+		return false;
 	}
 
 }

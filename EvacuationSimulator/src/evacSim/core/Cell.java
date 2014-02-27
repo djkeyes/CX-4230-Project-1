@@ -40,6 +40,11 @@ abstract public class Cell {
 	}
 
 	abstract public void calcUpdate();
+	
+	/**
+	 * @return true if a person can walk on this cell
+	 */
+	abstract boolean isWalkable();
 
 	protected final void setNextState(Cell nextState) {
 		this.nextState = nextState;
