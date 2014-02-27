@@ -5,11 +5,18 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import evacSim.util.RNG;
+
 public class SimulationController {
 
 	private UpdateHandler myHandler = null;
 	private Grid currentState;
 	private Timer timer;
+	
+	private static final int DEFAULT_SEED = 1234;
+	
+	// global RNG instance
+	public static final RNG random = new RNG(DEFAULT_SEED);
 
 	public SimulationController(Grid startingGrid, int timestep) {
 		currentState = startingGrid;
@@ -25,7 +32,7 @@ public class SimulationController {
 	public void setHandler(UpdateHandler handler) {
 		myHandler = handler;
 	}
-
+	
 	/**
 	 * Creates a simple simulation containing a small grid, a door, and a few
 	 * obstacles, initialized with some default parameters.

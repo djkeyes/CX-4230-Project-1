@@ -64,6 +64,6 @@ public class RNG {
 	 * @return A random number of the type integer 
 	 */
 	public int nextI(int min, int max){
-		return min + (int)Math.round(next() * (max - min));
+		return min + (int)Math.floor(next() * (max + 1 - min));
 	}
 }

@@ -34,6 +34,7 @@ public class Grid implements Iterable<Cell> {
 	public Cell getCell(int row, int col){
 		return cells[row][col];
 	}
+	
 
 	@Override
 	public Iterator<Cell> iterator() {
@@ -85,5 +86,9 @@ public class Grid implements Iterable<Cell> {
 	}
 	public int getCols(){
 		return nCols;
+	}
+
+	public boolean inBounds(int row, int col){
+		return row >= 0 && col >= 0 && row < nRows && col < nCols;
 	}
 }

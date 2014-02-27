@@ -9,7 +9,7 @@ import evacSim.util.RNG;
  *
  */
 public class Door extends Cell {
-	RNG random = new RNG();
+	RNG random = SimulationController.random;
 	
 	@Override
 	public void calcUpdate() {
