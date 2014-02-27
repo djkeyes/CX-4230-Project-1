@@ -121,8 +121,8 @@ public class Grid implements Iterable<Cell> {
 			distance[goal[0]][goal[1]] = 0;
 		}
 
-		int[] nextRow = { 1, 0, -1, 0 };
-		int[] nextCol = { 0, 1, 0, -1 };
+		int[] nextRow = { 1, 0, -1, 0, 1, 1, -1, -1};
+		int[] nextCol = { 0, 1, 0, -1, 1, -1, 1, -1};
 		LinkedList<int[]> queue = new LinkedList<int[]>();
 		queue.addAll(goals);
 		while (!queue.isEmpty()) {

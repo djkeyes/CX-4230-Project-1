@@ -139,6 +139,9 @@ public class SimulationController {
 
 		// TESTING
 		smallGrid.setCell(252, 100, new Door());
+		smallGrid.setCell(252, 101, new Door());
+		smallGrid.setCell(282, 61, new Door());
+		smallGrid.setCell(282, 152, new Door());
 
 		smallGrid.initializeEmptyCells();
 

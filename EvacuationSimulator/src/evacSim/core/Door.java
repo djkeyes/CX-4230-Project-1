@@ -13,6 +13,8 @@ import evacSim.util.RNG;
  */
 public class Door extends Cell {
 	
+	private static int numPeopleExited= 0;
+	private static final int PEOPLE_IN_BUILDING = 1500;
 	/**
 	 * returns a list of adjacent empty cells (which a person could walk into)
 	 */
@@ -47,6 +49,9 @@ public class Door extends Cell {
 	}
 	@Override
 	public void calcUpdate() {
+		if(numPeopleExited >= PEOPLE_IN_BUILDING){
+			return;
+		}
 		
 		// here's some default behavior that shouldn't work in general: just spawn to the right with Math.random()
 		// 20% chance.
@@ -58,6 +63,8 @@ public class Door extends Cell {
 				Cell spawningCell = adjacent.get(random.nextI(0, adjacent.size()-1));
 				// TODO make different people have different walking speeds
 				spawningCell.setNextState(new Person());
+				numPeopleExited++;
+				System.out.println(numPeopleExited);
 			}
 		}
 	}
