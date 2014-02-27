@@ -6,7 +6,7 @@ public class EmptyCell extends Cell {
 	public void calcUpdate() {}
 
 	@Override
-	boolean isWalkable() {
+	boolean isWalkable(Cell walker) {
 		return true;
 	}
 

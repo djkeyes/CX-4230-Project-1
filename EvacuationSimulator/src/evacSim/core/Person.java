@@ -5,10 +5,13 @@ import java.util.List;
 
 public class Person extends Cell {
 
+	private final int walkingTime;
 	private int count;
+	private boolean onCrosswalk;
 
 	public Person() {
-		this(10);
+		this(5);
+		onCrosswalk = false;
 	}
 
 	/**
@@ -16,7 +19,7 @@ public class Person extends Cell {
 	 *            The amount of time it takes this Person to take one step.
 	 */
 	private Person(int walkingTime) {
-		this.count = walkingTime;
+		this.count = this.walkingTime = walkingTime;
 	}
 
 	@Override
@@ -35,9 +38,9 @@ public class Person extends Cell {
 			// if the cell above us the top of the screen, don't do anything
 			if (getRow() > 0) {
 				Cell nextCell = null;
-				// if the cell above is an EmptyCell and not yet assigned
+				// if the cell above is walkable and not yet assigned
 				Cell north = getGrid().getCell(getRow() - 1, getCol());
-				if (north instanceof EmptyCell && north.getNextState() == null) {
+				if (north.isWalkable(this) && north.getNextState() == null) {
 					nextCell = north;
 				} else {
 					List<Cell> availableLocations = new LinkedList<Cell>();
@@ -46,22 +49,28 @@ public class Person extends Cell {
 						availableLocations.add(this);
 					if(getGrid().inBounds(getRow(), getCol()-1)){
 						Cell left = getGrid().getCell(getRow(), getCol()-1);
-						if (left instanceof EmptyCell && left.getNextState() == null)
+						if (left.isWalkable(this) && left.getNextState() == null)
 							availableLocations.add(left);
 					}
 					if(getGrid().inBounds(getRow(), getCol()+1)){
 						Cell right = getGrid().getCell(getRow(), getCol()+1);
-						if (right  instanceof EmptyCell && right.getNextState() == null)
+						if (right.isWalkable(this) && right.getNextState() == null)
 							availableLocations.add(right);
 					}
 					int index = SimulationController.random.nextI(0, availableLocations.size()-1);
 					nextCell = availableLocations.get(index);
 					
 				}
-				nextCell.setNextState(new Person(count));
-
-				if (getNextState() == null)
-					setNextState(new EmptyCell());
+				Person nextState = new Person(walkingTime);
+				nextState.onCrosswalk = nextCell instanceof Crosswalk;
+				nextCell.setNextState(nextState);
+				if (getNextState() == null){
+					if(onCrosswalk){
+						setNextState(new Crosswalk());
+					} else {
+						setNextState(new EmptyCell());
+					}
+				}
 			}
 			
 		}
@@ -69,8 +78,12 @@ public class Person extends Cell {
 	}
 
 	@Override
-	boolean isWalkable() {
+	boolean isWalkable(Cell walker) {
 		return false;
+	}
+	
+	boolean isOnCrosswalk(){
+		return onCrosswalk;
 	}
 
 }

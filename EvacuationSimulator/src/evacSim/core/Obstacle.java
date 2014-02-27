@@ -9,7 +9,7 @@ public class Obstacle extends Cell {
 	}
 
 	@Override
-	boolean isWalkable() {
+	boolean isWalkable(Cell walker) {
 		return false;
 	}
 }

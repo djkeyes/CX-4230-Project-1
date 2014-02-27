@@ -52,7 +52,7 @@ public class Door extends Cell {
 		// 5% chance.
 		RNG random = SimulationController.random;
 		// TODO use something other than a 5% uniform distribution
-		if(random.next() > 0.95){
+		if(random.next() > 0.8){
 			List<Cell> adjacent = findAdjacentCells();
 			if(adjacent.size() > 0){
 				Cell spawningCell = adjacent.get(random.nextI(0, adjacent.size()-1));
@@ -62,7 +62,7 @@ public class Door extends Cell {
 		}
 	}
 	@Override
-	boolean isWalkable() {
+	boolean isWalkable(Cell walker) {
 		return false;
 	}
 }

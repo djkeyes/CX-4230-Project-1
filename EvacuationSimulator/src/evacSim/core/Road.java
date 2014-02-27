@@ -8,7 +8,7 @@ public class Road extends Cell {
 	}
 
 	@Override
-	boolean isWalkable() {
+	boolean isWalkable(Cell walker) {
 		return false;
 	}
 

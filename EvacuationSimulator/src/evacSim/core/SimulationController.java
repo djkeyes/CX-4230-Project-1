@@ -19,15 +19,22 @@ public class SimulationController {
 	// TODO: make this a singleton member variable or something that uses good programming practice
 	public static final RNG random = new RNG(DEFAULT_SEED);
 
-	public SimulationController(Grid startingGrid, int timestep) {
+	public SimulationController(Grid startingGrid, int timestep, int crosswalkPeriod) {
 		currentState = startingGrid;
 
+		CrosswalkController.getInstance().setPeriod(crosswalkPeriod);
+		
 		timer = new Timer(timestep, new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				CrosswalkController.getInstance().step();
 				updateSimulation();
 			}
 		});
+	}
+
+	public SimulationController(Grid smallGrid, int timestep) {
+		this(smallGrid, timestep, 75);
 	}
 
 	public void setHandler(UpdateHandler handler) {
@@ -116,7 +123,7 @@ public class SimulationController {
 		// TODO: use the correct location
 		for(int c = 45; c <= 55; c++)
 			for(int r = 227; r <=246; r++)
-				smallGrid.setCell(r, c, new Obstacle());
+				smallGrid.setCell(r, c, new Crosswalk());
 		for(int c = 254; c <= 264; c++)
 			for(int r = 227; r <=246; r++)
 				smallGrid.setCell(r, c, new Crosswalk());
@@ -127,8 +134,9 @@ public class SimulationController {
 		
 		smallGrid.initializeEmptyCells();
 
-		int timestep = 100;
-		return new SimulationController(smallGrid, timestep);
+		int crosswalkInterval = 200;
+		int timestep = 10;
+		return new SimulationController(smallGrid, timestep, crosswalkInterval);
 	}
 
 	public void start() {

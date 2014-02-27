@@ -8,9 +8,17 @@ public class Crosswalk extends Cell {
 	}
 
 	@Override
-	boolean isWalkable() {
-		// TODO only sometimes
-		return true;
+	boolean isWalkable(Cell walker) {
+		if(!(walker instanceof Person)){
+			return false;
+		}
+		Person pWalker = (Person) walker;
+		if(CrosswalkController.getInstance().isCrosswalkOpen()){
+			return true;
+		} else {
+			//allow people already on the crosswalk to continue
+			return pWalker.isOnCrosswalk();
+		}
 	}
 
 }

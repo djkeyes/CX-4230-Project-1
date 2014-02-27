@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import evacSim.core.Cell;
+import evacSim.core.Crosswalk;
+import evacSim.core.CrosswalkController;
 import evacSim.core.EmptyCell;
 import evacSim.core.Obstacle;
 import evacSim.core.Person;
@@ -49,6 +51,11 @@ public class Visualizer {
 	        		rectColor = Color.GREEN;
 	        	else if(c instanceof EmptyCell)
 	        		rectColor = Color.WHITE;
+	        	else if(c instanceof Crosswalk)
+	        		if(CrosswalkController.getInstance().isCrosswalkOpen())
+	        			rectColor = Color.YELLOW;
+	        		else
+	        			rectColor = Color.RED;
 	        	else
 	        		rectColor = Color.GRAY;
 	        	
