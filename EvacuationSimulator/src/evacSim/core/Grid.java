@@ -22,25 +22,48 @@ public class Grid implements Iterable<Cell> {
 	// distance from goal, for use by pedestrians
 	int[][] pedestrianDistances;
 	
+	/**
+	 * By default, create a 100x100 cell grid.  This is very arbitrary.
+	 */
 	public Grid(){
 		this(100,100);
 	}
 
+	/**
+	 * Create a grid of cells with a specified number of rows and columns.
+	 * 
+	 * @param nRows The number of rows in the grid
+	 * @param nCols The number of columns in the grid
+	 */
 	public Grid(int nRows, int nCols) {
 		this.nRows = nRows;
 		this.nCols = nCols;
 		cells = new Cell[nRows][nCols];
 	}
 
+	/**
+	 * Fill a grid slot with a certain type of cell useful in the simulation.
+	 * 
+	 * @param row Row coordinate of the cell to fill
+	 * @param col Column coordinate of the cell to fill
+	 * @param newCell A specific cell type to insert into the grid
+	 */
 	public void setCell(int row, int col, Cell newCell) {
 		cells[row][col] = newCell;
 		newCell.setContainingGrid(this, row, col);
 	}
+	
+	/**
+	 * Determine the contents of the grid at a specified coordinate.
+	 * 
+	 * @param row Row coordinate of the cell to get
+	 * @param col Column coordinate of the cell to get
+	 * @return The contents of the specified grid coordinate
+	 */
 	public Cell getCell(int row, int col){
 		return cells[row][col];
 	}
 	
-
 	@Override
 	public Iterator<Cell> iterator() {
 		return new Iterator<Cell>(){
@@ -86,13 +109,31 @@ public class Grid implements Iterable<Cell> {
 		}
 	}
 	
+	/**
+	 * Get the row dimension of the grid.
+	 * 
+	 * @return Number of rows in the grid
+	 */
 	public int getRows(){
 		return nRows;
 	}
+	
+	/**
+	 * Get the column dimension of the grid.
+	 * 
+	 * @return Number of columns in the grid
+	 */
 	public int getCols(){
 		return nCols;
 	}
 
+	/**
+	 * Determine if the coordinate is in the grid.
+	 * 
+	 * @param row Row component of the coordinate
+	 * @param col Column component of the coordinate
+	 * @return True if the coordinate is in the grid and false if it is not
+	 */
 	public boolean inBounds(int row, int col){
 		return row >= 0 && col >= 0 && row < nRows && col < nCols;
 	}
@@ -143,5 +184,4 @@ public class Grid implements Iterable<Cell> {
 		
 		pedestrianDistances = distance;
 	}
-
 }

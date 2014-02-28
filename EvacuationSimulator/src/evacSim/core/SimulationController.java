@@ -35,11 +35,12 @@ public class SimulationController {
 	public static int simTime = 0;
 
 	/**
+	 * Instantiate simulation variables to run the simulation.
 	 * 
-	 * @param startingGrid
-	 * @param timestep
-	 * @param crosswalkPeriod
-	 * @param useRealtime
+	 * @param startingGrid A working model of the simulated universe
+	 * @param timestep Timer delay between simulation steps
+	 * @param crosswalkPeriod How long, by Timer delay the crosswalks remain open or closed
+	 * @param useRealtime Normalize to real-time visualization
 	 */
 	public SimulationController(Grid startingGrid, int timestep, int crosswalkPeriod, boolean useRealtime) {
 		currentState = startingGrid;
@@ -65,17 +66,19 @@ public class SimulationController {
 	}
 
 	/**
+	 * This is really only useful for testing purposes.
 	 * 
-	 * @param smallGrid
-	 * @param timestep
+	 * @param smallGrid A small grid
+	 * @param timestep A time step
 	 */
 	public SimulationController(Grid smallGrid, int timestep) {
 		this(smallGrid, timestep, 75, true);
 	}
 
 	/**
+	 * Manually set an update handler.
 	 * 
-	 * @param handler
+	 * @param handler An object that implements the update handler
 	 */
 	public void setHandler(UpdateHandler handler) {
 		myHandler = handler;
@@ -84,7 +87,7 @@ public class SimulationController {
 	/**
 	 * Creates a simple simulation containing a small grid, a door, and a few obstacles, initialized with some default parameters.
 	 * 
-	 * @return
+	 * @return A simple simulation that is good only for simple visualization purposes
 	 */
 	public static SimulationController createSimpleSimulation() {
 		Grid smallGrid = new Grid(5, 5);
@@ -110,41 +113,49 @@ public class SimulationController {
 	 * @return
 	 */
 	public static SimulationController createEvacSimulation(boolean runInRealtime, boolean randomizeDoors) {
-		Grid smallGrid = new Grid(300, 308);
+		Grid smallGrid = new Grid(300, 308); // Each cell is 0.5m by 0.5m
 
 		// Paving 5th St NW
 		for (int c = 0; c <= 268; c++)
 			for (int r = 17; r <= 36; r++)
 				smallGrid.setCell(r, c, new Road());
+		
 		// Paving Armstead Pl
 		for (int c = 41; c <= 268; c++)
 			for (int r = 227; r <= 246; r++)
 				smallGrid.setCell(r, c, new Road());
+		
 		// Paving Spring St
 		for (int c = 17; c <= 40; c++)
 			for (int r = 0; r <= 299; r++)
 				smallGrid.setCell(r, c, new Road());
+		
 		// Paving Peachtree St NW
 		for (int c = 269; c <= 292; c++)
 			for (int r = 0; r <= 299; r++)
 				smallGrid.setCell(r, c, new Road());
+		
 		// Paving 5th St NE
 		for (int c = 293; c <= 307; c++)
 			for (int r = 125; r <= 144; r++)
 				smallGrid.setCell(r, c, new Road());
+		
 		// Build the Management Building
 		for (int c = 47; c <= 262; c++)
 			for (int r = 43; r <= 220; r++)
 				if (!(r <= 146 && c >= 192)) // Management courtyard
 					smallGrid.setCell(r, c, new Obstacle());
+		
 		// Build the GT Hotel
 		for (int c = 0; c <= 10; c++)
 			for (int r = 43; r <= 299; r++)
 				smallGrid.setCell(r, c, new Obstacle());
 		// Build the new building on top of the Crum and Forster Building
+		
 		for (int c = 47; c <= 262; c++)
 			for (int r = 252; r <= 299; r++)
 				smallGrid.setCell(r, c, new Obstacle());
+		
 		// Various sundry buildings
 		for (int c = 299; c <= 307; c++)
 			for (int r = 151; r <= 299; r++)
@@ -158,6 +169,7 @@ public class SimulationController {
 		for (int c = 0; c <= 10; c++)
 			for (int r = 0; r <= 10; r++)
 				smallGrid.setCell(r, c, new Obstacle());
+		
 		// Painting two crosswalks
 		// 5th and Spring
 		for (int c = 42; c < 46; c++)
@@ -277,7 +289,7 @@ public class SimulationController {
 	}
 
 	/**
-	 * 
+	 * Start the simulation.
 	 */
 	public void start() {
 		stats.addStatistic("People safe", Person.peopleSafeOverTime);
@@ -295,7 +307,7 @@ public class SimulationController {
 	}
 
 	/**
-	 * 
+	 * Step through the simulation, updating all cells as appropriate.
 	 */
 	public void updateSimulation() {
 		CrosswalkController.getInstance().step();
@@ -317,15 +329,20 @@ public class SimulationController {
 	}
 
 	/**
+	 * Get all the cells in the implementation of the world.
 	 * 
-	 * @return
+	 * @return The world as it is at the given simulation step.
 	 */
 	public Grid getGrid() {
 		return currentState;
 	}
 
+	/**
+	 * Get results from the statistics aggregator.
+	 * 
+	 * @return The statistics aggregator.
+	 */
 	public Statistics getStatistics() {
 		return stats;
 	}
-
 }

@@ -4,9 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Persons are the key players in the evacuation simulation.  Their motion is critical to determining how to place doors on a
+ * building.
  * 
  * @author Daniel Keyes
- *
+ * @author Joseph Mattingly
  */
 public class Person extends Cell {
 
@@ -19,6 +21,10 @@ public class Person extends Cell {
 	static int numPeopleSafe= 0;
 	static List<Integer> peopleSafeOverTime = new LinkedList<Integer>();
 
+	/**
+	 * Not to be confused with a public person.  Most of the people in this simulation are hard-working private citizens like
+	 * you and me. But actually, this just creates a generic person who can walk at a predefined 1.5 m/s.
+	 */
 	public Person() {
 		// default: walk at 1 cell per second
 		this(1);
@@ -27,6 +33,7 @@ public class Person extends Cell {
 	}
 
 	/**
+	 * Create a person with a certain walking speed.
 	 * 
 	 * @param walkingTime The amount of time it takes this Person to take one step.
 	 */
@@ -34,6 +41,9 @@ public class Person extends Cell {
 		this.count = this.walkingTime = walkingTime;
 	}
 
+	/**
+	 * This method contains all the transition rules for how people move.
+	 */
 	@Override
 	public void calcUpdate() {
 		// Logic: Grid stores an array of distances to the goal. A person should consider the neighboring and current square (5 total)
@@ -106,17 +116,29 @@ public class Person extends Cell {
 
 	}
 
+	/**
+	 * Prevent people from walking into other people.  After all, that's just plain rude.
+	 */
 	@Override
 	boolean isWalkable(Cell walker) {
 		return false;
 	}
 
+	/**
+	 * Determine if the Person is currently in a crosswalk.  This is useful so people don't get stranded in oncoming traffic.
+	 * 
+	 * @return True if the Person is in the middle of any type of crosswalk.  False otherwise.
+	 */
 	boolean isOnCrosswalk() {
 		return onCrosswalkV || onCrosswalkH;
 	}
 	
+	/**
+	 * Determine when all people in the simulation have reached safety.  It's good when this is the case.
+	 * 
+	 * @return True when all Persons have successfully evacuated.  False otherwise.
+	 */
 	public static boolean isEveryoneSafe(){
 		return numPeopleSafe == Door.MAX_BUILDING_OCCUPANCY;
 	}
-
 }
