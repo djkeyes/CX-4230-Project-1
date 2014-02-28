@@ -12,7 +12,8 @@ public class Person extends Cell {
 
 	private final int walkingTime;
 	private int count;
-	private boolean onCrosswalk;
+	private boolean onCrosswalkV;
+	private boolean onCrosswalkH;
 	
 
 	static int numPeopleSafe= 0;
@@ -21,7 +22,8 @@ public class Person extends Cell {
 	public Person() {
 		// default: walk at 1 cell per second
 		this(1);
-		onCrosswalk = false;
+		onCrosswalkV = false;
+		onCrosswalkH = false;
 	}
 
 	/**
@@ -85,13 +87,16 @@ public class Person extends Cell {
 				int index = SimulationController.random.nextI(0, possibleLocations.size() - 1);
 				Cell nextCell = possibleLocations.get(index);
 				Person nextState = new Person(walkingTime);
-				nextState.onCrosswalk = nextCell instanceof Crosswalk || (nextCell == this && this.onCrosswalk);
+				nextState.onCrosswalkV = nextCell instanceof CrosswalkV || (nextCell == this && this.onCrosswalkV);
+				nextState.onCrosswalkH = nextCell instanceof CrosswalkH || (nextCell == this && this.onCrosswalkH);
 				nextCell.setNextState(nextState);
 			}
 
 			if (getNextState() == null) {
-				if (onCrosswalk) {
-					setNextState(new Crosswalk());
+				if (onCrosswalkV) {
+					setNextState(new CrosswalkV());
+				} else if (onCrosswalkH) {
+					setNextState(new CrosswalkH());
 				} else {
 					setNextState(new EmptyCell());
 				}
@@ -107,7 +112,7 @@ public class Person extends Cell {
 	}
 
 	boolean isOnCrosswalk() {
-		return onCrosswalk;
+		return onCrosswalkV || onCrosswalkH;
 	}
 	
 	public static boolean isEveryoneSafe(){

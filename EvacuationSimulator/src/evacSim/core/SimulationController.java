@@ -159,12 +159,43 @@ public class SimulationController {
 			for (int r = 0; r <= 10; r++)
 				smallGrid.setCell(r, c, new Obstacle());
 		// Painting two crosswalks
-		for (int c = 45; c < 50; c++)
+		// 5th and Spring
+		for (int c = 42; c < 46; c++)
 			for (int r = 17; r <= 36; r++)
-				smallGrid.setCell(r, c, new Crosswalk());
-		for (int c = 260; c <= 264; c++)
+				smallGrid.setCell(r, c, new CrosswalkV());
+		for (int c = 12; c < 16; c++)
 			for (int r = 17; r <= 36; r++)
-				smallGrid.setCell(r, c, new Crosswalk());
+				smallGrid.setCell(r, c, new CrosswalkV());
+		for (int c = 17; c < 41; c++)
+			for (int r = 38; r <= 42; r++)
+				smallGrid.setCell(r, c, new CrosswalkH());
+		for (int c = 17; c < 41; c++)
+			for (int r = 11; r <= 15; r++)
+				smallGrid.setCell(r, c, new CrosswalkH());
+		
+		// 5th (NW) and Peachtree
+		for (int c = 294; c <= 298; c++)
+			for (int r = 125; r <= 144; r++)
+				smallGrid.setCell(r, c, new CrosswalkV());
+		for (int c = 269; c <= 292; c++)
+			for (int r = 119; r <= 123; r++)
+				smallGrid.setCell(r, c, new CrosswalkH());
+		for (int c = 269; c <= 292; c++)
+			for (int r = 146; r <= 150; r++)
+				smallGrid.setCell(r, c, new CrosswalkH());
+		
+		// 5th (NE) and Peachtree
+		for (int c = 263; c <= 267; c++)
+			for (int r = 17; r <= 36; r++)
+				smallGrid.setCell(r, c, new CrosswalkV());
+		for (int c = 269; c <= 292; c++)
+			for (int r = 11; r <= 15; r++)
+				smallGrid.setCell(r, c, new CrosswalkH());
+		for (int c = 269; c <= 292; c++)
+			for (int r = 38; r <= 42; r++)
+				smallGrid.setCell(r, c, new CrosswalkH());
+		
+		// No crosswalk modeling at Armstead
 		for (int c = 45; c < 50; c++)
 			for (int r = 227; r <= 246; r++)
 				smallGrid.setCell(r, c, new EmptyCell());

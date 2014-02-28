@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 
 import evacSim.core.Cell;
 import evacSim.core.Crosswalk;
+import evacSim.core.CrosswalkV;
+import evacSim.core.CrosswalkH;
 import evacSim.core.CrosswalkController;
 import evacSim.core.EmptyCell;
 import evacSim.core.Obstacle;
@@ -51,11 +53,16 @@ public class Visualizer {
 	        		rectColor = Color.GREEN;
 	        	else if(c instanceof EmptyCell)
 	        		rectColor = Color.WHITE;
-	        	else if(c instanceof Crosswalk)
+	        	else if(c instanceof CrosswalkV)
 	        		if(CrosswalkController.getInstance().isCrosswalkOpen())
 	        			rectColor = Color.YELLOW;
 	        		else
 	        			rectColor = Color.RED;
+	        	else if(c instanceof CrosswalkH)
+	        		if(CrosswalkController.getInstance().isCrosswalkOpen())
+	        			rectColor = Color.RED;
+	        		else
+	        			rectColor = Color.YELLOW;
 	        	else
 	        		rectColor = Color.GRAY;
 	        	
