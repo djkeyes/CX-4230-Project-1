@@ -40,4 +40,9 @@ public class CrosswalkController {
 		return isCrosswalkOpen;
 	}
 	
+	public void reset(){
+		count = 0;
+		isCrosswalkOpen = false;
+	}
+	
 }

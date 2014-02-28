@@ -11,7 +11,9 @@ import javax.swing.Timer;
 
 import evacSim.util.RNG;
 
+// TODO make this into a singleton that can be reset, and store all the other class's static variables in here
 /**
+ * Main controller class for the simulation.
  * 
  * @author Daniel Keyes
  * @author Joseph Mattingly
@@ -55,6 +57,13 @@ public class SimulationController {
 				updateSimulation();
 			}
 		});
+		
+		// tacky: reset all the static variables in this class and elsewhere so we can re-run the simulation. see the TODO earlier.
+		simTime = 0;
+		Door.numPeopleExited = 0;
+		CrosswalkController.getInstance().reset(); // yay, singleton design pattern
+		Person.numPeopleSafe = 0;
+		Person.peopleSafeOverTime = new LinkedList<Integer>();
 	}
 
 	/**
