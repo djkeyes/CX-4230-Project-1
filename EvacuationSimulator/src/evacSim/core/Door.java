@@ -64,6 +64,7 @@ public class Door extends Cell {
 				spawningCell.setNextState(new Person());
 				numPeopleExited++;
 //				System.out.println(numPeopleExited);
+				System.out.print(",");
 			}
 		}
 	}

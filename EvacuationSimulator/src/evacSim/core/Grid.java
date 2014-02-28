@@ -14,16 +14,16 @@ import java.util.NoSuchElementException;
  * @author Daniel Keyes
  */
 public class Grid implements Iterable<Cell> {
-	
+
 	// grids are row-major indexed. cells[i][j] refers to row i, column j.
 	private Cell[][] cells;
 	private int nRows, nCols;
-	
+
 	// distance from goal, for use by pedestrians
 	int[][] pedestrianDistances;
-	
-	public Grid(){
-		this(100,100);
+
+	public Grid() {
+		this(100, 100);
 	}
 
 	public Grid(int nRows, int nCols) {
@@ -36,15 +36,15 @@ public class Grid implements Iterable<Cell> {
 		cells[row][col] = newCell;
 		newCell.setContainingGrid(this, row, col);
 	}
-	public Cell getCell(int row, int col){
+
+	public Cell getCell(int row, int col) {
 		return cells[row][col];
 	}
-	
 
 	@Override
 	public Iterator<Cell> iterator() {
-		return new Iterator<Cell>(){
-			private int nextRow=0, nextCol=0;
+		return new Iterator<Cell>() {
+			private int nextRow = 0, nextCol = 0;
 
 			@Override
 			public boolean hasNext() {
@@ -53,12 +53,12 @@ public class Grid implements Iterable<Cell> {
 
 			@Override
 			public Cell next() {
-				if(!hasNext()){
+				if (!hasNext()) {
 					throw new NoSuchElementException();
 				}
 				Cell result = cells[nextRow][nextCol];
 				nextCol++;
-				if(nextCol >= nCols){
+				if (nextCol >= nCols) {
 					nextCol = 0;
 					nextRow++;
 				}
@@ -69,7 +69,7 @@ public class Grid implements Iterable<Cell> {
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
-			
+
 		};
 	}
 
@@ -77,31 +77,34 @@ public class Grid implements Iterable<Cell> {
 	 * Fills any null cells with a new EmptyCell
 	 */
 	public void initializeEmptyCells() {
-		for(int i=0; i < cells.length; i++){
-			for(int j=0; j < cells[i].length; j++){
-				if(cells[i][j] == null){
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells[i].length; j++) {
+				if (cells[i][j] == null) {
 					setCell(i, j, new EmptyCell());
 				}
 			}
 		}
 	}
-	
-	public int getRows(){
+
+	public int getRows() {
 		return nRows;
 	}
-	public int getCols(){
+
+	public int getCols() {
 		return nCols;
 	}
 
-	public boolean inBounds(int row, int col){
+	public boolean inBounds(int row, int col) {
 		return row >= 0 && col >= 0 && row < nRows && col < nCols;
 	}
-	
 
 	/**
 	 * To initialize any datastructers needed for the simulation, after the grid has been specified
 	 */
 	void initialize() {
+		if (pedestrianDistances != null) {
+			return;
+		}
 		// Compute an array of distances for People to use to find a destination
 		// This code is quick-n-dirty
 		int[][] distance = new int[nRows][nCols];
@@ -121,8 +124,8 @@ public class Grid implements Iterable<Cell> {
 			distance[goal[0]][goal[1]] = 0;
 		}
 
-		int[] nextRow = { 1, 0, -1, 0, 1, 1, -1, -1};
-		int[] nextCol = { 0, 1, 0, -1, 1, -1, 1, -1};
+		int[] nextRow = { 1, 0, -1, 0, 1, 1, -1, -1 };
+		int[] nextCol = { 0, 1, 0, -1, 1, -1, 1, -1 };
 		LinkedList<int[]> queue = new LinkedList<int[]>();
 		queue.addAll(goals);
 		while (!queue.isEmpty()) {
@@ -140,8 +143,20 @@ public class Grid implements Iterable<Cell> {
 				}
 			}
 		}
-		
+
 		pedestrianDistances = distance;
+	}
+
+	public Grid copyAndReassign() {
+		Grid result = new Grid(this.nRows, this.nCols);
+		result.pedestrianDistances = this.pedestrianDistances;
+		for(int i=0; i < nRows; i++){
+			for(int j=0; j < nCols; j++){
+				result.cells[i][j] = cells[i][j];
+				result.cells[i][j].setContainingGrid(result, i, j);
+			}
+		}
+		return result;
 	}
 
 }

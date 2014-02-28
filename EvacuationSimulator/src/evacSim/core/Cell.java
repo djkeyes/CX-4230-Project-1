@@ -36,6 +36,8 @@ abstract public class Cell {
 	}
 
 	abstract public void calcUpdate();
+	
+	abstract public Cell copy();
 
 	/**
 	 * Returns whether the walker cell has permission to walk onto this cell. For example, a person might not be allowed to cross a
