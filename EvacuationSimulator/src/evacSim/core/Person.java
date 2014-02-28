@@ -3,6 +3,11 @@ package evacSim.core;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 
+ * @author Daniel Keyes
+ *
+ */
 public class Person extends Cell {
 
 	private final int walkingTime;
@@ -20,8 +25,8 @@ public class Person extends Cell {
 	}
 
 	/**
-	 * @param walkingTime
-	 *            The amount of time it takes this Person to take one step.
+	 * 
+	 * @param walkingTime The amount of time it takes this Person to take one step.
 	 */
 	private Person(int walkingTime) {
 		this.count = this.walkingTime = walkingTime;

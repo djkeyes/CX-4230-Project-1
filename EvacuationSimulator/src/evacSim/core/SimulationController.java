@@ -11,12 +11,19 @@ import javax.swing.Timer;
 
 import evacSim.util.RNG;
 
+/**
+ * 
+ * @author Daniel Keyes
+ * @author Joseph Mattingly
+ *
+ */
 public class SimulationController {
 
 	private UpdateHandler myHandler = null;
 	private Grid currentState;
 	private Timer timer;
 	private boolean useRealtime;
+	private int timestep;
 
 	private Statistics stats;
 
@@ -25,7 +32,15 @@ public class SimulationController {
 	// global RNG instance
 	// TODO: make this a singleton member variable or something that uses good programming practice
 	public static final RNG random = new RNG(DEFAULT_SEED);
+	public static int simTime = 0;
 
+	/**
+	 * 
+	 * @param startingGrid
+	 * @param timestep
+	 * @param crosswalkPeriod
+	 * @param useRealtime
+	 */
 	public SimulationController(Grid startingGrid, int timestep, int crosswalkPeriod, boolean useRealtime) {
 		currentState = startingGrid;
 		stats = new Statistics();
@@ -33,6 +48,7 @@ public class SimulationController {
 		CrosswalkController.getInstance().setPeriod(crosswalkPeriod);
 
 		this.useRealtime = useRealtime;
+		this.timestep = timestep;
 		timer = new Timer(timestep, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -41,10 +57,19 @@ public class SimulationController {
 		});
 	}
 
+	/**
+	 * 
+	 * @param smallGrid
+	 * @param timestep
+	 */
 	public SimulationController(Grid smallGrid, int timestep) {
 		this(smallGrid, timestep, 75, true);
 	}
 
+	/**
+	 * 
+	 * @param handler
+	 */
 	public void setHandler(UpdateHandler handler) {
 		myHandler = handler;
 	}
@@ -198,16 +223,15 @@ public class SimulationController {
 			// used a simple fixed door configuration
 			doorCoords.add(new int[] { 252, 100 });
 			doorCoords.add(new int[] { 252, 101 });
-			doorCoords.add(new int[] { 282, 61 });
-			doorCoords.add(new int[] { 282, 152 });
+			doorCoords.add(new int[] { 282, 47 });
+			doorCoords.add(new int[] { 282, 262 });
 		}
 		for (int[] coord : doorCoords) {
 			smallGrid.setCell(coord[0], coord[1], new Door());
 		}
-
 		smallGrid.initializeEmptyCells();
 
-		int crosswalkInterval = 200;
+		int crosswalkInterval = 375; //200;
 		int timestep = 10;
 
 		SimulationController result = new SimulationController(smallGrid, timestep, crosswalkInterval, runInRealtime);
@@ -216,6 +240,9 @@ public class SimulationController {
 		return result;
 	}
 
+	/**
+	 * 
+	 */
 	public void start() {
 		stats.addStatistic("People safe", Person.peopleSafeOverTime);
 		// stats.addStatistic("Mean distance");
@@ -231,8 +258,12 @@ public class SimulationController {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public void updateSimulation() {
 		CrosswalkController.getInstance().step();
+		simTime += timestep;
 
 		for (Cell c : currentState) {
 			c.calcUpdate();
@@ -249,6 +280,10 @@ public class SimulationController {
 		// Person.medianPersonDistance = ??
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Grid getGrid() {
 		return currentState;
 	}
