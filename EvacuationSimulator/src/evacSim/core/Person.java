@@ -13,6 +13,10 @@ public class Person extends Cell {
 	private final int walkingTime;
 	private int count;
 	private boolean onCrosswalk;
+	
+
+	static int numPeopleSafe= 0;
+	static List<Integer> peopleSafeOverTime = new LinkedList<Integer>();
 
 	public Person() {
 		// default: walk at 1 cell per second
@@ -38,11 +42,12 @@ public class Person extends Cell {
 
 		if (--count <= 0) {
 
-			if(getRow() == 0){
-				System.out.println(SimulationController.simTime + ":  A person made it out alive!");
-			} else{ // (getRow() > 0)
+			if (getRow() == 0) {
+				numPeopleSafe++;
+//				System.out.println("A person made it out alive!");
+			} else { // (getRow() > 0)
 				// if the cell above is walkable and not yet assigned
-				int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } };
+				int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 }, { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } };
 				List<Cell> possibleLocations = new LinkedList<Cell>();
 				possibleLocations.add(this);
 				int curDistance = getGrid().pedestrianDistances[getRow()][getCol()];
@@ -63,24 +68,24 @@ public class Person extends Cell {
 						}
 					}
 				}
-				
+
 				// of all the next possible locations, choose the best one
 				// if there are ties, choose randomly between them
-				
+
 				// first, remove sub-optimal options
 				// TODO: maybe we should randomly choose among the sub-optimal options? the current behavior looks pretty forced.
-				for(int i=possibleLocations.size()-1; i >= 0; i--){
+				for (int i = possibleLocations.size() - 1; i >= 0; i--) {
 					Cell cur = possibleLocations.get(i);
-					if(getGrid().pedestrianDistances[cur.getRow()][cur.getCol()] > minDistance){
+					if (getGrid().pedestrianDistances[cur.getRow()][cur.getCol()] > minDistance) {
 						possibleLocations.remove(i);
 					}
 				}
-				
+
 				// now we are left only with optimal choices. pick one.
-				int index = SimulationController.random.nextI(0, possibleLocations.size()-1);
+				int index = SimulationController.random.nextI(0, possibleLocations.size() - 1);
 				Cell nextCell = possibleLocations.get(index);
 				Person nextState = new Person(walkingTime);
-				nextState.onCrosswalk = nextCell instanceof Crosswalk || (nextCell==this && this.onCrosswalk);
+				nextState.onCrosswalk = nextCell instanceof Crosswalk || (nextCell == this && this.onCrosswalk);
 				nextCell.setNextState(nextState);
 			}
 
@@ -103,6 +108,10 @@ public class Person extends Cell {
 
 	boolean isOnCrosswalk() {
 		return onCrosswalk;
+	}
+	
+	public static boolean isEveryoneSafe(){
+		return numPeopleSafe == Door.MAX_BUILDING_OCCUPANCY;
 	}
 
 }

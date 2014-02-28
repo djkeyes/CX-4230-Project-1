@@ -1,8 +1,5 @@
 package evacSim.core;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Singleton class to handle and coordinate crosswalk mechanics over multiple sets of crosswalk tiles.
  * 
@@ -38,6 +35,11 @@ public class CrosswalkController {
 	}
 	public boolean isCrosswalkOpen(){
 		return isCrosswalkOpen;
+	}
+	
+	public void reset(){
+		count = 0;
+		isCrosswalkOpen = false;
 	}
 	
 }

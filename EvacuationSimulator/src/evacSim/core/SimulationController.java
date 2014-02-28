@@ -2,15 +2,16 @@ package evacSim.core;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.Timer;
 
 import evacSim.util.RNG;
 
+// TODO make this into a singleton that can be reset, and store all the other class's static variables in here
 /**
+ * Main controller class for the simulation.
  * 
  * @author Daniel Keyes
  * @author Joseph Mattingly
@@ -23,6 +24,8 @@ public class SimulationController {
 	private Timer timer;
 	private boolean useRealtime;
 	private int timestep;
+
+	private Statistics stats;
 
 	private static final int DEFAULT_SEED = 1234;
 
@@ -40,6 +43,7 @@ public class SimulationController {
 	 */
 	public SimulationController(Grid startingGrid, int timestep, int crosswalkPeriod, boolean useRealtime) {
 		currentState = startingGrid;
+		stats = new Statistics();
 
 		CrosswalkController.getInstance().setPeriod(crosswalkPeriod);
 
@@ -51,6 +55,13 @@ public class SimulationController {
 				updateSimulation();
 			}
 		});
+		
+		// tacky: reset all the static variables in this class and elsewhere so we can re-run the simulation. see the TODO earlier.
+		simTime = 0;
+		Door.numPeopleExited = 0;
+		CrosswalkController.getInstance().reset(); // yay, singleton design pattern
+		Person.numPeopleSafe = 0;
+		Person.peopleSafeOverTime = new LinkedList<Integer>();
 	}
 
 	/**
@@ -98,7 +109,7 @@ public class SimulationController {
 	 * 
 	 * @return
 	 */
-	public static SimulationController createEvacSimulation() {
+	public static SimulationController createEvacSimulation(boolean runInRealtime, boolean randomizeDoors) {
 		Grid smallGrid = new Grid(300, 308);
 
 		// Paving 5th St NW
@@ -130,8 +141,8 @@ public class SimulationController {
 		for (int c = 0; c <= 10; c++)
 			for (int r = 43; r <= 299; r++)
 				smallGrid.setCell(r, c, new Obstacle());
-		// Build the Crum and Forster Building
-		for (int c = 61; c <= 152; c++)
+		// Build the new building on top of the Crum and Forster Building
+		for (int c = 47; c <= 262; c++)
 			for (int r = 252; r <= 299; r++)
 				smallGrid.setCell(r, c, new Obstacle());
 		// Various sundry buildings
@@ -148,40 +159,105 @@ public class SimulationController {
 			for (int r = 0; r <= 10; r++)
 				smallGrid.setCell(r, c, new Obstacle());
 		// Painting two crosswalks
-		// TODO: use the correct location
-		for (int c = 45; c <= 55; c++)
+		for (int c = 45; c < 50; c++)
 			for (int r = 17; r <= 36; r++)
 				smallGrid.setCell(r, c, new Crosswalk());
-		for (int c = 254; c <= 264; c++)
+		for (int c = 260; c <= 264; c++)
 			for (int r = 17; r <= 36; r++)
 				smallGrid.setCell(r, c, new Crosswalk());
-		for (int c = 45; c <= 55; c++)
+		for (int c = 45; c < 50; c++)
 			for (int r = 227; r <= 246; r++)
 				smallGrid.setCell(r, c, new EmptyCell());
-		for (int c = 254; c <= 264; c++)
+		for (int c = 260; c <= 264; c++)
 			for (int r = 227; r <= 246; r++)
 				smallGrid.setCell(r, c, new EmptyCell());
 
-		// TESTING
-		smallGrid.setCell(252, 150, new Door());
+		List<int[]> doorCoords = new LinkedList<int[]>();
+		if (randomizeDoors) {
+			// used a simple fixed door configuration
+			// row = 252, 47 <= col <= 262, top
+			// col = 47, 253 <= row <= 299, east (without the corner)
+			// col = 262, 253 <= row <= 299, west (without the corner)
+			List<int[]> availableCoords = new LinkedList<int[]>();
+			for (int row = 252, col = 47; col <= 262; col++)
+				availableCoords.add(new int[] { row, col });
+			for (int col = 47, row = 253; row <= 299; row++)
+				availableCoords.add(new int[] { row, col });
+			for (int col = 262, row = 253; row <= 299; row++)
+				availableCoords.add(new int[] { row, col });
 
+			// first place the quadrouple door. then the double door. then single doors.
+			// after placing each door, remove that coordinate and the two surrounding coords from the list
+			// quad door
+			RNG random = SimulationController.random;
+			int quadIndex = random.nextI(0, availableCoords.size() - 1 - 3);
+			// replace 4 coords, and then remove those 4 and a surrounding coord from the block
+			for (int i = 0; i < 4; i++) {
+				doorCoords.add(availableCoords.remove(quadIndex));
+			}
+			if (availableCoords.size() > quadIndex)
+				availableCoords.remove(quadIndex); // the following block
+			if (availableCoords.size() > quadIndex - 1)
+				availableCoords.remove(quadIndex - 1); // the previous block
+			// also if we just orphaned a block at the end, remove it
+			if (availableCoords.size() == quadIndex + 1)
+				availableCoords.remove(quadIndex);
+			if (quadIndex == 2)
+				availableCoords.remove(0);
+			// double door
+			int doubIndex = random.nextI(0, availableCoords.size() - 1 - 1);
+			// replace 2 coords, and then remove those 2 and a surrounding coord from the block
+			for (int i = 0; i < 2; i++) {
+				doorCoords.add(availableCoords.remove(doubIndex));
+			}
+			if (availableCoords.size() > doubIndex)
+				availableCoords.remove(doubIndex); // the following block
+			if (availableCoords.size() > doubIndex - 1)
+				availableCoords.remove(doubIndex - 1); // the previous block
+			// 4 single doors
+			for (int i = 0; i < 4; i++) {
+				int singIndex = random.nextI(0, availableCoords.size() - 1 - 0);
+				// replace a coord, and then remove that coord and surrounding coord from the block
+				doorCoords.add(availableCoords.remove(singIndex));
+				if (availableCoords.size() > singIndex)
+					availableCoords.remove(singIndex); // the following block
+				if (availableCoords.size() > singIndex - 1)
+					availableCoords.remove(singIndex - 1); // the previous block
+			}
+		} else {
+			// used a simple fixed door configuration
+			doorCoords.add(new int[] { 252, 100 });
+			doorCoords.add(new int[] { 252, 101 });
+			doorCoords.add(new int[] { 282, 47 });
+			doorCoords.add(new int[] { 282, 262 });
+		}
+		for (int[] coord : doorCoords) {
+			smallGrid.setCell(coord[0], coord[1], new Door());
+		}
 		smallGrid.initializeEmptyCells();
 
 		int crosswalkInterval = 375; //200;
 		int timestep = 10;
-		return new SimulationController(smallGrid, timestep, crosswalkInterval, true);
+
+		SimulationController result = new SimulationController(smallGrid, timestep, crosswalkInterval, runInRealtime);
+		result.stats.addStatistic("Door positions", doorCoords);
+
+		return result;
 	}
 
 	/**
 	 * 
 	 */
 	public void start() {
+		stats.addStatistic("People safe", Person.peopleSafeOverTime);
+		// stats.addStatistic("Mean distance");
+
 		currentState.initialize();
 
 		if (useRealtime) {
 			timer.start();
 		} else {
-			while (true) {
+			while (!Person.isEveryoneSafe()) {
 				updateSimulation();
 			}
 		}
@@ -203,6 +279,10 @@ public class SimulationController {
 
 		if (myHandler != null)
 			myHandler.onUpdate();
+
+		// update some statistics
+		Person.peopleSafeOverTime.add(Person.numPeopleSafe);
+		// Person.medianPersonDistance = ??
 	}
 
 	/**
@@ -211,6 +291,10 @@ public class SimulationController {
 	 */
 	public Grid getGrid() {
 		return currentState;
+	}
+
+	public Statistics getStatistics() {
+		return stats;
 	}
 
 }
