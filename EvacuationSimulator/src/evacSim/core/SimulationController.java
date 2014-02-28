@@ -2,8 +2,6 @@ package evacSim.core;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -161,17 +159,16 @@ public class SimulationController {
 			for (int r = 0; r <= 10; r++)
 				smallGrid.setCell(r, c, new Obstacle());
 		// Painting two crosswalks
-		// TODO: use the correct location
-		for (int c = 45; c <= 55; c++)
+		for (int c = 45; c < 50; c++)
 			for (int r = 17; r <= 36; r++)
 				smallGrid.setCell(r, c, new Crosswalk());
-		for (int c = 254; c <= 264; c++)
+		for (int c = 260; c <= 264; c++)
 			for (int r = 17; r <= 36; r++)
 				smallGrid.setCell(r, c, new Crosswalk());
-		for (int c = 45; c <= 55; c++)
+		for (int c = 45; c < 50; c++)
 			for (int r = 227; r <= 246; r++)
 				smallGrid.setCell(r, c, new EmptyCell());
-		for (int c = 254; c <= 264; c++)
+		for (int c = 260; c <= 264; c++)
 			for (int r = 227; r <= 246; r++)
 				smallGrid.setCell(r, c, new EmptyCell());
 
