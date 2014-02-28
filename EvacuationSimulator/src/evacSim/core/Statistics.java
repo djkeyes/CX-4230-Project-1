@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Collect statistics from a simulation.
+ * Collect and report statistics from a simulation.
  * 
  * @author Joseph Mattingly
- *
+ * @author Daniel Keyes
  */
 public class Statistics {
 
@@ -17,13 +17,21 @@ public class Statistics {
 	Map<String, List> stats = new HashMap<String, List>();
 	
 	/**
-	 * @param statisticName the name of the statistic
-	 * @param data the timestep-index metric this name refers to
+	 * Store statistics from the simulation under a user-defined name.
+	 * 
+	 * @param statisticName The name of the statistic
+	 * @param data The timestep-index metric this name refers to
 	 */
 	void addStatistic(String statisticName, List data){
 		stats.put(statisticName, data);
 	}
 	
+	/**
+	 * Returns a statistic of a pre-assigned name.
+	 * 
+	 * @param statisticName Name of the statistic, orginally assigned by the user
+	 * @return The statistic requested by the user
+	 */
 	public List getStatistic(String statisticName){
 		return stats.get(statisticName);
 	}

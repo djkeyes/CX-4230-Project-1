@@ -35,11 +35,12 @@ public class SimulationController {
 	public static int simTime = 0;
 
 	/**
+	 * Instantiate simulation variables to run the simulation.
 	 * 
-	 * @param startingGrid
-	 * @param timestep
-	 * @param crosswalkPeriod
-	 * @param useRealtime
+	 * @param startingGrid A working model of the simulated universe
+	 * @param timestep Timer delay between simulation steps
+	 * @param crosswalkPeriod How long, by Timer delay the crosswalks remain open or closed
+	 * @param useRealtime Normalize to real-time visualization
 	 */
 	public SimulationController(Grid startingGrid, int timestep, int crosswalkPeriod, boolean useRealtime) {
 		currentState = startingGrid;
@@ -65,17 +66,19 @@ public class SimulationController {
 	}
 
 	/**
+	 * This is really only useful for testing purposes.
 	 * 
-	 * @param smallGrid
-	 * @param timestep
+	 * @param smallGrid A small grid
+	 * @param timestep A time step
 	 */
 	public SimulationController(Grid smallGrid, int timestep) {
 		this(smallGrid, timestep, 75, true);
 	}
 
 	/**
+	 * Manually set an update handler.
 	 * 
-	 * @param handler
+	 * @param handler An object that implements the update handler
 	 */
 	public void setHandler(UpdateHandler handler) {
 		myHandler = handler;
@@ -84,7 +87,7 @@ public class SimulationController {
 	/**
 	 * Creates a simple simulation containing a small grid, a door, and a few obstacles, initialized with some default parameters.
 	 * 
-	 * @return
+	 * @return A simple simulation that is good only for simple visualization purposes
 	 */
 	public static SimulationController createSimpleSimulation() {
 		Grid smallGrid = new Grid(5, 5);
@@ -307,7 +310,7 @@ public class SimulationController {
 	}
 
 	/**
-	 * 
+	 * Start the simulation.
 	 */
 	public void start() {
 		stats.addStatistic("People safe", Person.peopleSafeOverTime);
@@ -325,7 +328,7 @@ public class SimulationController {
 	}
 
 	/**
-	 * 
+	 * Step through the simulation, updating all cells as appropriate.
 	 */
 	public void updateSimulation() {
 		CrosswalkController.getInstance().step();
@@ -347,15 +350,20 @@ public class SimulationController {
 	}
 
 	/**
+	 * Get all the cells in the implementation of the world.
 	 * 
-	 * @return
+	 * @return The world as it is at the given simulation step.
 	 */
 	public Grid getGrid() {
 		return currentState;
 	}
 
+	/**
+	 * Get results from the statistics aggregator.
+	 * 
+	 * @return The statistics aggregator.
+	 */
 	public Statistics getStatistics() {
 		return stats;
 	}
-
 }
