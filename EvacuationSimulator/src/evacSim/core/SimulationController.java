@@ -174,7 +174,6 @@ public class SimulationController {
 
 		List<int[]> doorCoords = new LinkedList<int[]>();
 		if (randomizeDoors) {
-			// TODO randomize
 			// used a simple fixed door configuration
 			// row = 252, 47 <= col <= 262, top
 			// col = 47, 253 <= row <= 299, east (without the corner)
