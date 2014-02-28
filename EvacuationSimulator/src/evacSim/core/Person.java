@@ -39,7 +39,7 @@ public class Person extends Cell {
 
 			if (getRow() == 0) {
 				numPeopleSafe++;
-				System.out.println("A person made it out alive!");
+//				System.out.println("A person made it out alive!");
 			} else { // (getRow() > 0)
 				// if the cell above is walkable and not yet assigned
 				int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 }, { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } };

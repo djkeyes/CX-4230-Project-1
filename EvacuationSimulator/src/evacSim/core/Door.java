@@ -53,18 +53,17 @@ public class Door extends Cell {
 			return;
 		}
 		
-		// here's some default behavior that shouldn't work in general: just spawn to the right with Math.random()
-		// 20% chance.
+		// At peak hours in the student center, 154 people entered the door in 20 minutes = 1200 second = 3000 time steps
+		// This means at any timestep, there's a 0.05133 chance of spawning a person. Call that 5%.
 		RNG random = SimulationController.random;
-		// TODO use something other than a 20% uniform distribution
-		if(random.next() > 0.8){
+		if(random.next() > 0.95){
 			List<Cell> adjacent = findAdjacentCells();
 			if(adjacent.size() > 0){
 				Cell spawningCell = adjacent.get(random.nextI(0, adjacent.size()-1));
 				// TODO make different people have different walking speeds
 				spawningCell.setNextState(new Person());
 				numPeopleExited++;
-				System.out.println(numPeopleExited);
+//				System.out.println(numPeopleExited);
 			}
 		}
 	}
