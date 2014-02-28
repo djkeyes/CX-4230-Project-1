@@ -72,4 +72,9 @@ public class Door extends Cell {
 	boolean isWalkable(Cell walker) {
 		return false;
 	}
+	
+	@Override
+	public Cell copy() {
+		return new Door();
+	}
 }

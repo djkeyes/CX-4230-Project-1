@@ -10,4 +10,9 @@ public class EmptyCell extends Cell {
 		return true;
 	}
 
+	@Override
+	public Cell copy() {
+		return new EmptyCell();
+	}
+
 }

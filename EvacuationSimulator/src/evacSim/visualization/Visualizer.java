@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 
 import evacSim.core.Cell;
 import evacSim.core.Crosswalk;
+import evacSim.core.CrosswalkV;
+import evacSim.core.CrosswalkH;
 import evacSim.core.CrosswalkController;
 import evacSim.core.EmptyCell;
 import evacSim.core.Obstacle;
@@ -17,6 +19,11 @@ import evacSim.core.Person;
 import evacSim.core.SimulationController;
 import evacSim.core.UpdateHandler;
 
+/**
+ * This creates the GUI which visually represents the simulation.
+ * 
+ * @author Daniel Keyes
+ */
 public class Visualizer {
 
 	private SimulationController mySim;
@@ -24,19 +31,22 @@ public class Visualizer {
 
 	private JLabel view;
 	private BufferedImage surface;
-
+	
+	/**
+	 * Constructor that initializes all the elements defined above. 
+	 */
 	public Visualizer(SimulationController sim) {
 		mySim = sim;
 		myHandler = new VisualizationHandler();
 		mySim.setHandler(myHandler);
 		
 		surface = new BufferedImage(600,600,BufferedImage.TYPE_INT_RGB);
-        view = new JLabel(new ImageIcon(surface));
+        	view = new JLabel(new ImageIcon(surface));
 	}
 
 	private class VisualizationHandler implements UpdateHandler {
 		public void onUpdate() {
-	        Graphics g = surface.getGraphics();
+	        Graphics g = surface.getGraphics();		//Create a new instance of Graphics (GUI platform)
 	        
 	        int width = surface.getWidth();
 	        int height = surface.getHeight();
@@ -46,16 +56,21 @@ public class Visualizer {
 	        for(Cell c : mySim.getGrid()){
 	        	Color rectColor;
 	        	if(c instanceof Obstacle)
-	        		rectColor = Color.RED;
+	        		rectColor = Color.RED;		//Set an obstacle color to red
 	        	else if(c instanceof Person)
-	        		rectColor = Color.GREEN;
+	        		rectColor = Color.GREEN;	//Set a person color to green
 	        	else if(c instanceof EmptyCell)
-	        		rectColor = Color.WHITE;
-	        	else if(c instanceof Crosswalk)
+	        		rectColor = Color.WHITE;	//Set an empty cell color to white
+	        	else if(c instanceof CrosswalkV)	//Define cases for vertical crosswalk
 	        		if(CrosswalkController.getInstance().isCrosswalkOpen())
-	        			rectColor = Color.YELLOW;
+	        			rectColor = Color.YELLOW;	
 	        		else
+	        			rectColor = Color.RED;		
+	        	else if(c instanceof CrosswalkH) 	//Define cases for horizontal crosswalk
+	        		if(CrosswalkController.getInstance().isCrosswalkOpen())
 	        			rectColor = Color.RED;
+	        		else
+	        			rectColor = Color.YELLOW;
 	        	else
 	        		rectColor = Color.GRAY;
 	        	
@@ -71,13 +86,13 @@ public class Visualizer {
 	        }
 	        
 	        
-	        view.repaint();
+	        view.repaint(); //repaint the simulation with updated elements
 		}
 	}
 
 	public void show() {
 		// do some JFrame boilerplate
-		JFrame frame = new JFrame("Cellular Automata Hazard Evaculation Simulator");
+		JFrame frame = new JFrame("Cellular Automata Hazard Evaculation Simulator"); //title
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// I'm backing this with a JPanel containing a Bufferent Image. We could probably also just use a
 		// JApplet, or a Canvas, or something. Java GUIs aren't my forte.

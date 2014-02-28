@@ -152,7 +152,7 @@ public class Grid implements Iterable<Cell> {
 		result.pedestrianDistances = this.pedestrianDistances;
 		for(int i=0; i < nRows; i++){
 			for(int j=0; j < nCols; j++){
-				result.cells[i][j] = cells[i][j];
+				result.cells[i][j] = cells[i][j].copy();
 				result.cells[i][j].setContainingGrid(result, i, j);
 			}
 		}

@@ -12,4 +12,9 @@ public class Road extends Cell {
 		return false;
 	}
 
+	@Override
+	public Cell copy() {
+		return new Road();
+	}
+
 }

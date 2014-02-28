@@ -1,6 +1,6 @@
 package evacSim.core;
 
-public class Crosswalk extends Cell {
+public abstract class Crosswalk extends Cell {
 
 	@Override
 	public void calcUpdate() {
