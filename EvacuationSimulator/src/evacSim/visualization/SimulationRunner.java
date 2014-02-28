@@ -1,5 +1,6 @@
 package evacSim.visualization;
 
+import evacSim.core.Grid;
 import evacSim.core.SimulationController;
 import evacSim.core.Statistics;
 
@@ -11,13 +12,24 @@ import evacSim.core.Statistics;
  */
 public class SimulationRunner {
 	public static void main(String[] args) {
-		for (int i = 0; i < 1; i++) {
-			SimulationController sim = SimulationController.createEvacSimulation(false, true);
-			sim.start();
-			Statistics stats = sim.getStatistics();
-			System.out.println(stats.getStatistic("People safe"));
-			stats.getStatistic("Mean distance");
-			stats.getStatistic("Door positions");
+		for (int i = 0; i < 100; i++) {
+			// rerun the same simulation 20 times on the same grid
+			Grid curGrid = null;
+			for(int j=0; j < 20; j++){
+				SimulationController sim;
+				if(curGrid == null){
+					sim = SimulationController.createEvacSimulation(false, true);
+					curGrid = sim.getGrid();
+				} else {
+					sim = SimulationController.createEvacSimulation(false, curGrid);
+				}
+				sim.start();
+				
+				Statistics stats = sim.getStatistics();
+				System.out.println(stats.getStatistic("People safe"));
+				stats.getStatistic("Mean distance");
+				stats.getStatistic("Door positions");
+			}
 		}
 	}
 }
